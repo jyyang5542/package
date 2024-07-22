@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "sass-watch": "npx sass --watch assets/scss:assets/css"
+  }
+}
