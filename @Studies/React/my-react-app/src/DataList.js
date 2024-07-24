@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DataItem from './DataItem';
+import './DataList.css'; // 스타일링을 위한 CSS 파일
 
 function DataList() {
   const [data, setData] = useState([]);
@@ -9,9 +11,9 @@ function DataList() {
     // API 호출 함수
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/data');
+        const response = await fetch(process.env.REACT_APP_API_URL || 'http://localhost:3001/data');
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Failed to fetch data from the server.');
         }
         const result = await response.json();
         setData(result);
@@ -23,14 +25,14 @@ function DataList() {
     };
 
     fetchData();
-  }, []); // 빈 배열을 의존성으로 전달하여 컴포넌트가 마운트될 때 한 번만 실행
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="spinner">Loading...</div>; // 로딩 스피너 추가
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div className="error">Error: {error.message}</div>;
   }
 
   return (
@@ -38,7 +40,7 @@ function DataList() {
       <h1>Data List</h1>
       <ul>
         {data.map(item => (
-          <li key={item.id}>{item.name}</li>
+          <DataItem key={item.id} item={item} />
         ))}
       </ul>
     </div>
